@@ -624,7 +624,7 @@
         여섯 개의 비밀을 찾아보세요.
       </div>
 
-      <!-- START 버튼 (오디오 잠금 해제 함수 포함) -->
+      <!-- START 버튼 -->
       <button class="start-button" onclick="unlockAudioAndProceed(goToStory);">
         START
       </button>
@@ -895,7 +895,6 @@
     let pendingItemId = null;
     let html5QrCode = null;
 
-    // --- 이미지 미리 로드(Preload) 함수 ---
     function preloadImages() {
       const imagesToPreload = [
         "images/character.png",
@@ -931,7 +930,6 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
     }
 
-    // --- 브라우저 오디오 잠금 해제 및 콜백 실행 함수 ---
     function unlockAudioAndProceed(callback) {
       const sfxIds = ['sfx-click', 'sfx-item', 'sfx-rebirth', 'sfx-trap'];
       
@@ -953,7 +951,6 @@
       callback();
     }
 
-    // --- 기본 효과음 재생 함수 ---
     function playSound(audioId) {
       const sfx = document.getElementById(audioId);
       if (sfx) {
@@ -965,10 +962,29 @@
     }
 
     function playClickSound() { playSound('sfx-click'); }
-    function playItemSound() { playSound('sfx-item'); }
+    
+    // 🌟 첫 번째 아이템도 무조건 소리가 나도록 강제 로드 및 재생 처리
+    function playItemSound() {
+      const sfx = document.getElementById('sfx-item');
+      if (sfx) {
+        sfx.currentTime = 0;
+        sfx.play().catch(e => {
+          console.log("Item audio retry:", e);
+        });
+      }
+    }
+
     function playRebirthSound() { playSound('sfx-rebirth'); }
-    function playTrapSound() { playSound('sfx-trap'); }
-    // ------------------------------------------------
+    
+    function playTrapSound() {
+      const sfx = document.getElementById('sfx-trap');
+      if (sfx) {
+        sfx.currentTime = 0;
+        sfx.play().catch(e => {
+          console.log("Trap audio retry:", e);
+        });
+      }
+    }
 
     function goToStory() {
       const bgm = document.getElementById("bgm");
